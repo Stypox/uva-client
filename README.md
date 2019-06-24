@@ -1,0 +1,2 @@
+# UVa Online Judge: get PDFs and open problems in browser
+It works directly via command line. Just run `python3 UVa.py` and the instructions will be on the screen! If you want to run the script without being prompted for the mode and the problem (e.g. to use it inside another program), use `python3 UVa.py [v|view|s|submit] PROBLEM`
