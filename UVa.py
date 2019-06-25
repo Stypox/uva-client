@@ -4,7 +4,10 @@ from urllib.request import urlretrieve
 
 def downloadPDF(problem):
 	url = "https://uva.onlinejudge.org/external/%s/%s.pdf" % (problem[:-2], problem)
-	file = f"./PDF/{problem}.pdf"
+	dir = "./PDF/"
+	file = f"{dir}{problem}.pdf"
+
+	os.makedirs(dir, exist_ok=True)
 	urlretrieve(url, file)
 	return file
 
