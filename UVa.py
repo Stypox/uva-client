@@ -1,4 +1,4 @@
-import webbrowser, os, sys
+import webbrowser, os, sys, subprocess, platform
 from urllib.request import urlretrieve
 
 
@@ -139,8 +139,15 @@ def problemToId(problem):
 
 
 def view(problem):
-	file = downloadPDF(problem)
-	webbrowser.open("file://" + os.path.realpath(file))
+	filepath = downloadPDF(problem)
+	filepath = "file://" + os.path.realpath(filepath)
+
+	if platform.system() == 'Darwin':
+		subprocess.call(('open', filepath))
+	elif platform.system() == 'Windows':
+		os.startfile(filepath)
+	else: # Linux
+		subprocess.call(('xdg-open', filepath))
 
 def submit(problem):
 	id = problemToId(problem)
