@@ -160,6 +160,8 @@ def eval(mode, problem):
 			view(problem)
 		elif mode in ["s", "submit"]:
 			submit(problem)
+		elif mode in ["d", "download"]:
+			print(downloadPDF(problem))
 		else:
 			print(f"Invalid mode: {mode}")
 	except:
@@ -170,7 +172,7 @@ def main(argv):
 		eval(argv[1], argv[2])
 	else:
 		while 1:
-			mode = input("Mode [v/view; s/submit]: ")
+			mode = input("Mode [v/view; s/submit; d/download]: ")
 			problem = input("Problem: ")
 			eval(mode, problem)
 			print("\n\n")
