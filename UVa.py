@@ -1,11 +1,11 @@
 import webbrowser, os, sys, subprocess, platform
 from urllib.request import urlretrieve
 
-
 def downloadPDF(problem):
-	url = "https://uva.onlinejudge.org/external/%s/%s.pdf" % (problem[:-2], problem)
+	url = f"https://uva.onlinejudge.org/external/{problem[:-2]}/{problem}.pdf"
 	dir = "./PDF/"
 	file = f"{dir}{problem}.pdf"
+	print("Downloading pdf", file, "from", url)
 
 	os.makedirs(dir, exist_ok=True)
 	urlretrieve(url, file)
@@ -151,7 +151,9 @@ def view(problem):
 
 def submit(problem):
 	id = problemToId(problem)
-	webbrowser.open("https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=submit_problem&problemid=" + str(id))
+	url = f"https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=submit_problem&problemid={id}"
+	print("Submit url:", url)
+	webbrowser.open(url)
 
 
 def eval(mode, problem):
@@ -164,8 +166,8 @@ def eval(mode, problem):
 			print(downloadPDF(problem))
 		else:
 			print(f"Invalid mode: {mode}")
-	except:
-		print("Error")
+	except Exception as e:
+		print("Error:", e)
 
 def main(argv):
 	if len(argv) == 3:
