@@ -1,16 +1,6 @@
 import webbrowser, os, sys, subprocess, platform
 from urllib.request import urlretrieve
 
-def downloadPDF(problem):
-	url = f"https://uva.onlinejudge.org/external/{problem[:-2]}/{problem}.pdf"
-	dir = "./PDF/"
-	file = f"{dir}{problem}.pdf"
-	print("Downloading pdf", file, "from", url)
-
-	os.makedirs(dir, exist_ok=True)
-	urlretrieve(url, file)
-	return file
-
 submitProblemIdBegin = {
 	  1:   36,
 	  2:  136,
@@ -44,6 +34,7 @@ submitProblemIdBegin = {
 	128: 4665,
 	133: 5224
 }
+
 def problemToId(problem):
 	volume = int(problem[:-2])
 	number = int(problem[-2:])
@@ -138,16 +129,37 @@ def problemToId(problem):
 		return submitProblemIdBegin[volume] + number
 
 
-def view(problem):
-	filepath = downloadPDF(problem)
-	filepath = "file://" + os.path.realpath(filepath)
+def downloadPDF(problem):
+	url = f"https://uva.onlinejudge.org/external/{problem[:-2]}/{problem}.pdf"
+	dir = "./PDF/"
+	file = f"{dir}{problem}.pdf"
+	print("Downloading pdf", file, "from", url)
 
-	if platform.system() == 'Darwin':
-		subprocess.call(('open', filepath))
-	elif platform.system() == 'Windows':
-		os.startfile(filepath)
-	else: # Linux
-		subprocess.call(('xdg-open', filepath))
+	os.makedirs(dir, exist_ok=True)
+	urlretrieve(url, file)
+	return file
+
+def view(problem, flag):
+	filepath = downloadPDF(problem)
+	filepath = os.path.realpath(filepath)
+	filepathProtocol = "file://" + filepath
+	
+	vscodeAliases = ["code", "codium", "vscodium", "vscode"]
+	if flag in vscodeAliases:
+		for program in vscodeAliases:
+			try:
+				subprocess.check_output(("which", program))
+				subprocess.call((program, filepath))
+				break
+			except:
+				pass
+	else:
+		if platform.system() == 'Darwin':
+			subprocess.call(('open', filepathProtocol))
+		elif platform.system() == 'Windows':
+			os.startfile(filepathProtocol)
+		else: # Linux
+			subprocess.call(('xdg-open', filepathProtocol))
 
 def submit(problem):
 	id = problemToId(problem)
@@ -156,27 +168,31 @@ def submit(problem):
 	webbrowser.open(url)
 
 
-def eval(mode, problem):
+def eval(mode, problem, flag):
 	try:
 		if mode in ["v", "view"]:
-			view(problem)
+			view(problem, flag)
 		elif mode in ["s", "submit"]:
 			submit(problem)
 		elif mode in ["d", "download"]:
-			print(downloadPDF(problem))
+			downloadPDF(problem)
 		else:
 			print(f"Invalid mode: {mode}")
 	except Exception as e:
 		print("Error:", e)
 
 def main(argv):
-	if len(argv) == 3:
-		eval(argv[1], argv[2])
+	if len(argv) in [3, 4]:
+		eval(argv[1], argv[2], argv[3] if len(argv) == 4 else "")
 	else:
 		while 1:
 			mode = input("Mode [v/view; s/submit; d/download]: ")
 			problem = input("Problem: ")
-			eval(mode, problem)
+			if mode in ["v", "view"]:
+				flag = input("Program to use for view (code/codium/vscodium/vscode for vscode; leave empty for default): ")
+			else:
+				flag = ""
+			eval(mode, problem, flag)
 			print("\n\n")
 
 if __name__ == "__main__":
