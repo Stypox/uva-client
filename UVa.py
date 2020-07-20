@@ -130,7 +130,8 @@ def problemToId(problem):
 
 
 def downloadPDF(problem):
-	url = f"https://uva.onlinejudge.org/external/{problem[:-2]}/{problem}.pdf"
+	# use http to prevent certificate problems
+	url = f"http://uva.onlinejudge.org/external/{problem[:-2]}/{problem}.pdf"
 	dir = "./PDF/"
 	file = f"{dir}{problem}.pdf"
 	print("Downloading pdf", file, "from", url)
