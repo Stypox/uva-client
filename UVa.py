@@ -164,7 +164,7 @@ def view(problem, flag):
 
 def submit(problem):
 	id = problemToId(problem)
-	url = f"https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=submit_problem&problemid={id}"
+	url = f"https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=submit_problem&problemid={id}&category=0"
 	print("Submit url:", url)
 	webbrowser.open(url)
 
